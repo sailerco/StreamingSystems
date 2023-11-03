@@ -1,4 +1,6 @@
-/*package org.example;
+package org.example;
+
+import java.util.Enumeration;
 
 public class QueryHandler implements Query{
     @Override
@@ -16,4 +18,3 @@ public class QueryHandler implements Query{
         return null;
     }
 }
-*/
