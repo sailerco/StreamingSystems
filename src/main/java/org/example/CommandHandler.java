@@ -1,5 +1,14 @@
 package org.example;
 
+import org.example.CommandPrompts.CommandChangeValue;
+import org.example.CommandPrompts.CommandCreateItem;
+import org.example.CommandPrompts.CommandDeleteItem;
+import org.example.CommandPrompts.CommandMoveItem;
+import org.example.EventPrompts.EventMovingItemChangedValue;
+import org.example.EventPrompts.EventMovingItemCreated;
+import org.example.EventPrompts.EventMovingItemDeleted;
+import org.example.EventPrompts.EventMovingItemMoved;
+
 public class CommandHandler {
 
     EventStoreImpl _eventStore = new EventStoreImpl();
@@ -10,60 +19,17 @@ public class CommandHandler {
             INSTANCE = new CommandHandler();
         return INSTANCE;
     }
-
+    //TODO: Validierung
    public void handle(CommandCreateItem command){
-        ItemAggregate itemAggregate = (ItemAggregate) _eventStore.loadAggregate(ItemAggregate.class, new EventScope());
-
-        _eventStore.store(new EventMovingItemCreated(itemAggregate));
-
-        //TODO: CommandCreateItem -> wtf muss da drin sein
-       //TODO: EventMovingItemCreated -> wtf muss da drin sein
-       //TODO: validierung in loadaggregate oder itemaggregate
+       _eventStore.store(new EventMovingItemCreated(command.id, command.location, command.value));
     }
-
-
-
-    public void handle(CommandMoveItem command){}
-    public void handle(CommandDeleteItem command){}
-    public void handle(CommandChangeValue command){}
-
-    /*Map<String, MovingItemImpl> items;
-
-    public CommandHandler() {
-        this.items = new HashMap<>();
+    public void handle(CommandMoveItem command){
+        _eventStore.store(new EventMovingItemMoved(command.id, command.vector));
     }
-
-    @Override
-    public void createItem(String id) {
-        if (!items.containsKey(id))
-            items.put(id, new MovingItemImpl(id, 0));
+    public void handle(CommandDeleteItem command){
+        _eventStore.store(new EventMovingItemDeleted(command.id));
     }
-
-    @Override
-    public void createItem(String id, int[] position, int value) {
-        if (!items.containsKey(id))
-            items.put(id, new MovingItemImpl(id, position, value));
+    public void handle(CommandChangeValue command){
+        _eventStore.store(new EventMovingItemChangedValue(command.id, command.newValue));
     }
-
-    @Override
-    public void deleteItem(String id) {
-        items.remove(id); //TODO: check if it is really deleted
-    }
-
-    @Override
-    public void moveItem(String id, int[] vector) {
-        MovingItemImpl currentItem = items.get(id);
-        int[] location = currentItem.getLocation();
-        for (int i = 0; i < location.length; i++) {
-            location[i] += vector[i];
-        }
-        currentItem.setLocation(location);
-        currentItem.setMoves();
-    }
-
-    @Override
-    public void changeValue(String id, int newValue) {
-        MovingItemImpl currentItem = items.get(id);
-        currentItem.setValue(newValue);
-    }*/
 }

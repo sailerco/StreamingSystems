@@ -1,5 +1,10 @@
 package org.example;
 
+import org.example.CommandPrompts.CommandChangeValue;
+import org.example.CommandPrompts.CommandCreateItem;
+import org.example.CommandPrompts.CommandDeleteItem;
+import org.example.CommandPrompts.CommandMoveItem;
+
 public class CommandImpl implements Commands{
 
     @Override

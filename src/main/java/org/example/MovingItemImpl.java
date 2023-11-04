@@ -21,7 +21,7 @@ public class MovingItemImpl implements MovingItem {
     }
 
     public void setMoves() {
-        this.moves = moves+1;
+        this.moves = moves + 1;
     }
 
     @Override

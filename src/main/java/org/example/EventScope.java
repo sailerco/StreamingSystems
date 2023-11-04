@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.EventPrompts.Event;
+
 public class EventScope {
     Class<? extends Event> _eventType;
     String _id;
