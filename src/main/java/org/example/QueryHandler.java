@@ -7,9 +7,15 @@ import static org.example.QueryModel.query_database;
 public class QueryHandler implements Query{
     @Override
     public MovingItemDTO getMovingItemByName(String name) {
-        return (MovingItemDTO) query_database.get(name);
+        //todo: datatype MovingItemImpl
+        MovingItemImpl movingItem = query_database.get(name);
+        if(movingItem != null)
+            return new MovingItemDTOImpl(movingItem.getName(), movingItem.getLocation(), movingItem.moves, movingItem.getValue());
+        else
+            return null;
     }
 
+    //TODO: FIX OTHER METHODS
     @Override
     public Enumeration<MovingItemDTO> getMovingItems() {
         //todo: Enum? nicht richtig nutzen
