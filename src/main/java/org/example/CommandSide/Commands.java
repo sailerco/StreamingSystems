@@ -1,4 +1,4 @@
-package org.example;
+package org.example.CommandSide;
 
 public interface Commands {
     void createItem(String id);

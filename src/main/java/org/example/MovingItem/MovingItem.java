@@ -1,4 +1,4 @@
-package org.example;
+package org.example.MovingItem;
 
 public interface MovingItem {
     String getName();

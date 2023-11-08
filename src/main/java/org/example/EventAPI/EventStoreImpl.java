@@ -1,6 +1,7 @@
-package org.example;
+package org.example.EventAPI;
 
 import org.example.EventPrompts.Event;
+import org.example.ItemAggregate;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;

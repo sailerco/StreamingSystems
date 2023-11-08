@@ -1,4 +1,4 @@
-package org.example;
+package org.example.CommandSide;
 
 import org.example.CommandPrompts.CommandChangeValue;
 import org.example.CommandPrompts.CommandCreateItem;
@@ -8,6 +8,7 @@ import org.example.EventPrompts.EventMovingItemChangedValue;
 import org.example.EventPrompts.EventMovingItemCreated;
 import org.example.EventPrompts.EventMovingItemDeleted;
 import org.example.EventPrompts.EventMovingItemMoved;
+import org.example.EventAPI.EventStoreImpl;
 
 public class CommandHandler {
 

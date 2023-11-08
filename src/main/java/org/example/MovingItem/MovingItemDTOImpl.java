@@ -1,27 +1,16 @@
-package org.example;
+package org.example.MovingItem;
 
-public class MovingItemImpl implements MovingItem {
+public class MovingItemDTOImpl implements MovingItemDTO {
     private final String name;
-    private int[] location = new int[3];
-    public int moves;
+    private int[] location;
+    private int moves;
     private int value;
 
-    public MovingItemImpl(String name, int[] location, int value) {
+    public MovingItemDTOImpl(String name, int[] location, int moves, int value) {
         this.name = name;
         this.location = location;
+        this.moves = moves;
         this.value = value;
-        this.moves = 0;
-    }
-
-    public MovingItemImpl(String name, int value) {
-        this.name = name;
-        this.value = value;
-        this.location = new int[]{0, 0, 0};
-        this.moves = 0;
-    }
-
-    public void setMoves() {
-        this.moves = moves + 1;
     }
 
     @Override
@@ -34,6 +23,7 @@ public class MovingItemImpl implements MovingItem {
         return location;
     }
 
+    @Override
     public void setLocation(int[] location) {
         this.location = location;
     }
@@ -44,12 +34,17 @@ public class MovingItemImpl implements MovingItem {
     }
 
     @Override
+    public void setMoves() {
+        this.moves = moves + 1;
+    }
+
+    @Override
     public int getValue() {
         return value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }
 }
-

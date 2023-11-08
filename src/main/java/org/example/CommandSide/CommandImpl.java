@@ -1,4 +1,4 @@
-package org.example;
+package org.example.CommandSide;
 
 import org.example.CommandPrompts.CommandChangeValue;
 import org.example.CommandPrompts.CommandCreateItem;
