@@ -19,7 +19,7 @@ public class QueryHandler implements Query {
     @Override
     public Enumeration<MovingItemDTO> getMovingItems() {
         List<MovingItemDTO> items = new ArrayList<>();
-        for (Map.Entry<String, MovingItemDTOImpl> entry : query_database.entrySet()) {
+        for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
             items.add(entry.getValue());
         }
         return Collections.enumeration(items);
@@ -28,7 +28,7 @@ public class QueryHandler implements Query {
     @Override
     public Enumeration<MovingItemDTO> getMovingItemsAtPosition(int[] position) {
         List<MovingItemDTO> items = new ArrayList<>();
-        for (Map.Entry<String, MovingItemDTOImpl> entry : query_database.entrySet()) {
+        for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
             if (Arrays.equals(entry.getValue().getLocation(), position)) {
                 items.add(entry.getValue());
             }

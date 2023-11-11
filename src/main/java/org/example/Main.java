@@ -23,7 +23,7 @@ public class Main {
         item.createItem("Lisa", new int[]{6, 7, 8}, 0);
         item.createItem("Otto", new int[]{0, 0, 3}, 0);
 
-        for (Map.Entry<String, MovingItemDTOImpl> entry : query_database.entrySet()) {
+        for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
             System.out.println("for loop: " + entry.getKey() + " : " + entry.getValue().getName() + ", " + entry.getValue().getValue() + ", " + Arrays.toString(entry.getValue().getLocation()) + ", " + entry.getValue().getNumberOfMoves());
         }
 
