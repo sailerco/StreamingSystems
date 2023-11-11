@@ -5,7 +5,7 @@ import org.example.CommandPrompts.CommandCreateItem;
 import org.example.CommandPrompts.CommandDeleteItem;
 import org.example.CommandPrompts.CommandMoveItem;
 
-public class CommandImpl implements Commands{
+public class CommandImpl implements Commands {
 
     @Override
     public void createItem(String id) {

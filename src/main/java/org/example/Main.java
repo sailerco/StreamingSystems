@@ -2,7 +2,6 @@ package org.example;
 
 import org.example.CommandSide.CommandImpl;
 import org.example.MovingItem.MovingItemDTO;
-import org.example.MovingItem.MovingItemDTOImpl;
 import org.example.QuerySide.QueryHandler;
 
 import java.util.Arrays;

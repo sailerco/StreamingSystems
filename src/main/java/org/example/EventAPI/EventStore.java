@@ -4,5 +4,6 @@ import org.example.EventPrompts.Event;
 
 public interface EventStore {
     void store(Event event);
+
     Event getEvent() throws InterruptedException;
 }

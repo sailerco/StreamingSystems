@@ -1,6 +1,5 @@
 import org.example.CommandSide.CommandImpl;
 import org.example.MovingItem.MovingItemDTO;
-import org.example.MovingItem.MovingItemDTOImpl;
 import org.junit.Test;
 
 import java.util.Map;
@@ -11,11 +10,11 @@ import static org.junit.Assert.assertEquals;
 public class clientTest {
     private CommandImpl command = new CommandImpl();
     private String name = "Tom";
-    private int[] start = new int[]{2,3,4};
+    private int[] start = new int[]{2, 3, 4};
     private int value = 0;
 
     @Test
-    public void testAddObject(){
+    public void testAddObject() {
         command.createItem(name, start, value);
 
         for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
@@ -25,15 +24,16 @@ public class clientTest {
             assertEquals(0, entry.getValue().getNumberOfMoves());
         }
     }
+
     @Test
-    public void testMoveObject(){
+    public void testMoveObject() {
         command.createItem(name, start, value);
 
-        int[] move = new int[]{2,3,4};
+        int[] move = new int[]{2, 3, 4};
         command.moveItem(name, move);
 
         for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
-            assertEquals(new int[]{4,6,8}, entry.getValue().getLocation());
+            assertEquals(new int[]{4, 6, 8}, entry.getValue().getLocation());
             assertEquals(1, entry.getValue().getNumberOfMoves());
         }
     }

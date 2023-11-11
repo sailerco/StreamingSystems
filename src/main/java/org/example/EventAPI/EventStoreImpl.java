@@ -9,11 +9,12 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class EventStoreImpl implements EventStore {
     public BlockingQueue<Event> queue = new LinkedBlockingDeque<>();
 
-    public void store(Event event){
-        if(queue.offer(event)){
+    public void store(Event event) {
+        if (queue.offer(event)) {
             new EventHandler().consumeEvent(event);
         }
     }
+
     public Event getEvent() throws InterruptedException {
         return queue.take();
     }
