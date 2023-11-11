@@ -1,15 +1,8 @@
 package org.example.CommandSide;
 
-import org.example.CommandPrompts.CommandChangeValue;
-import org.example.CommandPrompts.CommandCreateItem;
-import org.example.CommandPrompts.CommandDeleteItem;
-import org.example.CommandPrompts.CommandMoveItem;
+import org.example.CommandPrompts.*;
 import org.example.EventAPI.EventStoreImpl;
-import org.example.EventPrompts.EventMovingItemChangedValue;
-import org.example.EventPrompts.EventMovingItemCreated;
-import org.example.EventPrompts.EventMovingItemDeleted;
-import org.example.EventPrompts.EventMovingItemMoved;
-
+import org.example.EventPrompts.*;
 public class CommandHandler {
 
     EventStoreImpl _eventStore = new EventStoreImpl();
