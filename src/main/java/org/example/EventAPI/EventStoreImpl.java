@@ -1,7 +1,6 @@
 package org.example.EventAPI;
 
 import org.example.EventPrompts.Event;
-import org.example.ItemAggregate;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -17,11 +16,5 @@ public class EventStoreImpl implements EventStore {
     }
     public Event getEvent() throws InterruptedException {
         return queue.take();
-    }
-
-    //todo: probs dann überflüssig
-    public Object loadAggregate(Class<ItemAggregate> itemAggregateClass, Event event) {
-
-        return new ItemAggregate();
     }
 }

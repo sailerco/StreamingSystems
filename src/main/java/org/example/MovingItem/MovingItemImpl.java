@@ -34,6 +34,7 @@ public class MovingItemImpl implements MovingItem {
     public int getNumberOfMoves() {
         return moves;
     }
+
     @Override
     public int getValue() {
         return value;
