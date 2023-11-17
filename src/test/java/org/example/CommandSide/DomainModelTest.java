@@ -1,18 +1,46 @@
 package org.example.CommandSide;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
+import org.example.CommandPrompts.CommandCreateItem;
+import org.example.CommandPrompts.CommandDeleteItem;
+import org.example.CommandPrompts.CommandMoveItem;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DomainModelTest {
     DomainModel model = new DomainModel();
-    @BeforeAll
-    public static void setup(){
-        DomainModel.domainIDs.add("Tom");
+    @BeforeEach
+    public void setup(){
+        DomainModel.IDsAndMoves.clear();
+        model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
+        model.create(new CommandCreateItem("Bob", new int[]{0, 0, 0}, 0));
+        DomainModel.IDsAndMoves.put("Tom", 19);
     }
     @Test
-    public void existsTest(){
+    public void createTest(){
         assertTrue(model.exists("Tom"));
+        model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
+        //check if the key value was overwritten -> would be an error if it overwrites
+        assertEquals(DomainModel.IDsAndMoves.get("Tom"), 19);
+    }
+    @Test
+    public void moveItemTest(){
+        model.moveItem(new CommandMoveItem("Tom", new int[]{1, 1, 4}));
+        assertFalse(model.exists("Tom"));
+
+        model.moveItem(new CommandMoveItem("Bob", new int[]{3, 4, 1}));
+        assertTrue(model.exists("Bob"));
+        assertEquals(DomainModel.IDsAndMoves.get("Bob"), 1);
+
+        model.create(new CommandCreateItem("Alice", new int[]{0, 0, 0}, 0));
+        model.moveItem(new CommandMoveItem("Alice", new int[]{3, 4, 1}));
+        assertFalse(model.exists("Bob"));
+    }
+
+    @Test
+    public void deleteItem(){
+        model.remove(new CommandDeleteItem("Tom"));
+        assertFalse(model.exists("Tom"));
     }
 }
