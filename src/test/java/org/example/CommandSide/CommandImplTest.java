@@ -17,7 +17,7 @@ class CommandImplTest {
     @BeforeEach
     void setup(){
         QueryModel.query_database.clear();
-        DomainModel.IDsAndMoves.clear();
+        DomainModel.idsAndMoves.clear();
     }
     @Test
     void createItem() {

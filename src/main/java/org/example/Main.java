@@ -21,6 +21,8 @@ public class Main {
         item.moveItem("Tom", new int[]{2, 3, 4});
         item.createItem("Lisa", new int[]{6, 7, 8}, 0);
         item.createItem("Otto", new int[]{0, 0, 3}, 0);
+        item.createItem("Bob");
+        item.moveItem("Bob", new int[]{0, 0, 3});
 
         for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
             System.out.println("for loop: " + entry.getKey() + " : " + entry.getValue().getName() + ", " + entry.getValue().getValue() + ", " + Arrays.toString(entry.getValue().getLocation()) + ", " + entry.getValue().getNumberOfMoves());

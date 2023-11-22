@@ -12,17 +12,17 @@ class DomainModelTest {
     DomainModel model = new DomainModel();
     @BeforeEach
     public void setup(){
-        DomainModel.IDsAndMoves.clear();
+        DomainModel.idsAndMoves.clear();
         model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
         model.create(new CommandCreateItem("Bob", new int[]{0, 0, 0}, 0));
-        DomainModel.IDsAndMoves.put("Tom", 19);
+        DomainModel.idsAndMoves.put("Tom", 19);
     }
     @Test
     public void createTest(){
         assertTrue(model.exists("Tom"));
         model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
         //check if the key value was overwritten -> would be an error if it overwrites
-        assertEquals(DomainModel.IDsAndMoves.get("Tom"), 19);
+        assertEquals(DomainModel.idsAndMoves.get("Tom"), 19);
     }
     @Test
     public void moveItemTest(){
@@ -31,7 +31,7 @@ class DomainModelTest {
 
         model.moveItem(new CommandMoveItem("Bob", new int[]{3, 4, 1}));
         assertTrue(model.exists("Bob"));
-        assertEquals(DomainModel.IDsAndMoves.get("Bob"), 1);
+        assertEquals(DomainModel.idsAndMoves.get("Bob"), 1);
 
         model.create(new CommandCreateItem("Alice", new int[]{0, 0, 0}, 0));
         model.moveItem(new CommandMoveItem("Alice", new int[]{3, 4, 1}));

@@ -15,18 +15,26 @@ public class EventHandler {
             MovingItemDTO itemQuery = new MovingItemDTOImpl(itemCommand.getName(), itemCommand.getLocation(), itemCommand.getNumberOfMoves(), itemCommand.getValue());
             query_database.put(((EventMovingItemCreated) event).item.getName(), itemQuery);
         } else if (event instanceof EventMovingItemMoved) {
-            MovingItemDTO item = query_database.get(((EventMovingItemMoved) event).id);
-            int[] location = item.getLocation();
-            for (int i = 0; i < location.length; i++) {
-                location[i] += ((EventMovingItemMoved) event).vector[i];
-            }
-            item.setLocation(location);
-            item.setMoves();
+            MovingItemDTO item = query_database.get(event.id);
+            movePosition(item, (EventVector) event);
         } else if (event instanceof EventMovingItemDeleted) {
-            query_database.remove(((EventMovingItemDeleted) event).id);
+            query_database.remove(event.id);
         } else if (event instanceof EventMovingItemChangedValue) {
-            MovingItemDTO item = query_database.get(((EventMovingItemChangedValue) event).id);
+            MovingItemDTO item = query_database.get(event.id);
             item.setValue(((EventMovingItemChangedValue) event).newValue);
+        } else if (event instanceof EventDeleteItemAndMoveAnotherItem) {
+            query_database.remove(event.id);
+            MovingItemDTO item = query_database.get(((EventDeleteItemAndMoveAnotherItem) event).new_id);
+            movePosition(item, (EventVector) event);
         }
+    }
+
+    private void movePosition(MovingItemDTO item, EventVector event) {
+        int[] location = item.getLocation();
+        for (int i = 0; i < location.length; i++) {
+            location[i] += event.vector[i];
+        }
+        item.setLocation(location);
+        item.setMoves();
     }
 }
