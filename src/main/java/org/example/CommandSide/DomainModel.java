@@ -49,7 +49,8 @@ public class DomainModel {
             if (!movedOverLimit(command.id)) {
                 int[] newPosition = computePosition(usedPositions.get(command.id), command.vector);
                 String key = getKeyByPosition(newPosition);
-                if (usedPositions.containsKey(key)) handleCollisionAndMove(key, command.id, newPosition);
+                if (usedPositions.containsKey(key)) handleCollisionAndMove(key, command.id, command.vector);
+                else storeEvent(new EventMovingItemMoved(command.id, command.vector));
             } else remove(command);
         } else System.out.println("Item with id " + command.id + "doesn't exist and therefore cannot be moved");
     }
