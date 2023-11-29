@@ -1,6 +1,8 @@
 package org.example.EventPrompts;
 
-public class EventMovingItemMoved extends EventVector {
+import java.io.Serializable;
+
+public class EventMovingItemMoved extends EventVector implements Serializable {
 
     public EventMovingItemMoved(String id, int[] vector) {
         this.id = id;

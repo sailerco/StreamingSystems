@@ -14,7 +14,7 @@ public class clientTest {
     private int value = 0;
 
     @Test
-    public void testAddObject() {
+    public void testAddObject() throws Exception {
         command.createItem(name, start, value);
 
         for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
@@ -26,7 +26,7 @@ public class clientTest {
     }
 
     @Test
-    public void testMoveObject() {
+    public void testMoveObject() throws Exception {
         command.createItem(name, start, value);
 
         int[] move = new int[]{2, 3, 4};

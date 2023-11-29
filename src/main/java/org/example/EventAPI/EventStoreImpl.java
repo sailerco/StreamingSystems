@@ -2,6 +2,7 @@ package org.example.EventAPI;
 
 import org.example.EventPrompts.Event;
 
+import javax.jms.JMSException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class EventStoreImpl implements EventStore {
     public BlockingQueue<Event> queue = new LinkedBlockingDeque<>();
 
-    public void store(Event event) {
+    public void store(Event event) throws JMSException {
         if (queue.offer(event)) {
             new EventHandler().consumeEvent(event);
         }

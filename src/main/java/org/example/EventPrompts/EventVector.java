@@ -1,5 +1,7 @@
 package org.example.EventPrompts;
 
-public class EventVector extends Event{
+import java.io.Serializable;
+
+public class EventVector extends Event implements Serializable {
     public int[] vector;
 }
