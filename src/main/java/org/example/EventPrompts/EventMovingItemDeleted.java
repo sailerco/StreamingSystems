@@ -1,8 +1,10 @@
 package org.example.EventPrompts;
 
-public class EventMovingItemDeleted extends Event {
-    public String id;
-    public EventMovingItemDeleted(String id){
+import java.io.Serializable;
+
+public class EventMovingItemDeleted extends Event implements Serializable {
+
+    public EventMovingItemDeleted(String id) {
         this.id = id;
     }
 }

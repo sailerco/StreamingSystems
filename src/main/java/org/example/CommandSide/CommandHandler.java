@@ -1,36 +1,37 @@
 package org.example.CommandSide;
 
-import org.example.CommandPrompts.CommandChangeValue;
-import org.example.CommandPrompts.CommandCreateItem;
-import org.example.CommandPrompts.CommandDeleteItem;
-import org.example.CommandPrompts.CommandMoveItem;
-import org.example.EventPrompts.EventMovingItemChangedValue;
-import org.example.EventPrompts.EventMovingItemCreated;
-import org.example.EventPrompts.EventMovingItemDeleted;
-import org.example.EventPrompts.EventMovingItemMoved;
-import org.example.EventAPI.EventStoreImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.CommandPrompts.*;
+
+import javax.jms.JMSException;
 
 public class CommandHandler {
+    DomainModel model = new DomainModel();
 
-    EventStoreImpl _eventStore = new EventStoreImpl();
     // Singleton implementiert
     private static CommandHandler INSTANCE;
-    public static CommandHandler getInstance(){
-        if(INSTANCE == null)
+
+    public CommandHandler() throws Exception {
+    }
+
+    public static CommandHandler getInstance() throws Exception {
+        if (INSTANCE == null)
             INSTANCE = new CommandHandler();
         return INSTANCE;
     }
-    //TODO: Validierung
-   public void handle(CommandCreateItem command){
-       _eventStore.store(new EventMovingItemCreated(command.id, command.location, command.value));
+
+    public void handle(CommandCreateItem command) throws JMSException, JsonProcessingException {
+        model.create(command);
     }
-    public void handle(CommandMoveItem command){
-        _eventStore.store(new EventMovingItemMoved(command.id, command.vector));
+
+    public void handle(CommandMoveItem command) throws JMSException, JsonProcessingException {
+        model.moveItem(command);
     }
-    public void handle(CommandDeleteItem command){
-        _eventStore.store(new EventMovingItemDeleted(command.id));
+
+    public void handle(CommandChangeValue command) throws JMSException, JsonProcessingException {
+        model.changeValue(command);
     }
-    public void handle(CommandChangeValue command){
-        _eventStore.store(new EventMovingItemChangedValue(command.id, command.newValue));
+    public void handle(CommandDeleteItem command) throws JMSException, JsonProcessingException {
+        model.remove(command);
     }
 }

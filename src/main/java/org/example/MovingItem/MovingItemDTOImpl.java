@@ -1,5 +1,8 @@
 package org.example.MovingItem;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class MovingItemDTOImpl implements MovingItemDTO {
     private final String name;
     private int[] location;
@@ -47,4 +50,14 @@ public class MovingItemDTOImpl implements MovingItemDTO {
     public void setValue(int value) {
         this.value = value;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovingItemDTOImpl that = (MovingItemDTOImpl) o;
+        return moves == that.moves && value == that.value && Objects.equals(name, that.name) && Arrays.equals(location, that.location);
+    }
+
 }

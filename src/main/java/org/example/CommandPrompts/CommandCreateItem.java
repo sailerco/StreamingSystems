@@ -1,7 +1,6 @@
 package org.example.CommandPrompts;
 
-public class CommandCreateItem {
-    public String id;
+public class CommandCreateItem extends CommandPrompt {
     public int[] location = new int[3];
     public int value;
 

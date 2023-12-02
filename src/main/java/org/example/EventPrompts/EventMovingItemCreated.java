@@ -1,12 +1,16 @@
 package org.example.EventPrompts;
 
+import org.example.MovingItem.MovingItem;
 import org.example.MovingItem.MovingItemImpl;
 
-public class EventMovingItemCreated extends Event {
-    public MovingItemImpl item;
+import java.io.Serializable;
 
-    public EventMovingItemCreated(String name, int[] location, int value) {
+public class EventMovingItemCreated extends Event implements Serializable {
+    public MovingItem item;
+
+    public EventMovingItemCreated(String id, int[] location, int value) {
         super();
-        this.item = new MovingItemImpl(name, location, value);
+        this.id = id;
+        this.item = new MovingItemImpl(id, location, value);
     }
 }

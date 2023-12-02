@@ -1,6 +1,8 @@
 package org.example.MovingItem;
 
-public class MovingItemImpl implements MovingItem {
+import java.io.Serializable;
+
+public class MovingItemImpl implements MovingItem, Serializable {
     private final String name;
     private int[] location = new int[3];
     private int moves;
@@ -34,6 +36,7 @@ public class MovingItemImpl implements MovingItem {
     public int getNumberOfMoves() {
         return moves;
     }
+
     @Override
     public int getValue() {
         return value;

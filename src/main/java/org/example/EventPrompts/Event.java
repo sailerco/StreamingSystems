@@ -1,6 +1,7 @@
 package org.example.EventPrompts;
 
-public class Event {
-    public Event() {
-    }
+import java.io.Serializable;
+
+public class Event implements Serializable {
+    public String id;
 }
