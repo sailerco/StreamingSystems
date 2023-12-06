@@ -1,36 +1,39 @@
 package org.example.EventAPI;
 
+import jakarta.jms.ObjectMessage;
+import org.example.ConnectionMQ;
 import org.example.EventPrompts.*;
 import org.example.MovingItem.MovingItem;
 import org.example.MovingItem.MovingItemDTO;
 import org.example.MovingItem.MovingItemDTOImpl;
 
-import javax.jms.JMSException;
-import javax.jms.ObjectMessage;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.example.QuerySide.QueryModel.query_database;
 
 //projeziert daten auf das Query Model
 public class EventHandler {
-    ConsumerConnection consumerConnection;
+    private final List<Long> eventTimes = new ArrayList<>();
+    ConnectionMQ connectionMQ;
 
-    public EventHandler() throws JMSException {
-        this.consumerConnection = new ConsumerConnection();
+    public EventHandler() throws jakarta.jms.JMSException {
+        this.connectionMQ = new ConnectionMQ();
     }
 
-    public void doEvent() throws JMSException {
-        ObjectMessage eventMessage = (ObjectMessage) this.consumerConnection.consumeMessage();
-        System.out.println(eventMessage.getObject());
-        if (eventMessage.getObject() instanceof Event)
+    public void processEvent() throws jakarta.jms.JMSException {
+        ObjectMessage eventMessage = (ObjectMessage) this.connectionMQ.consumeMessage();
+        if (eventMessage.getObject() instanceof Event) {
+            eventTimes.add((System.currentTimeMillis() - eventMessage.getLongProperty("timestamp")));
             consumeEvent((Event) eventMessage.getObject());
-
+        }
     }
 
     public void consumeEvent(Event event) {
         if (event instanceof EventMovingItemCreated) {
-            MovingItem itemCommand = ((EventMovingItemCreated) event).item;
-            MovingItemDTO itemQuery = new MovingItemDTOImpl(itemCommand.getName(), itemCommand.getLocation(), itemCommand.getNumberOfMoves(), itemCommand.getValue());
-            query_database.put(((EventMovingItemCreated) event).item.getName(), itemQuery);
+            MovingItem item = ((EventMovingItemCreated) event).item;
+            MovingItemDTO itemDTO = new MovingItemDTOImpl(item.getName(), item.getLocation(), item.getNumberOfMoves(), item.getValue());
+            query_database.put(((EventMovingItemCreated) event).item.getName(), itemDTO);
         } else if (event instanceof EventMovingItemMoved) {
             MovingItemDTO item = query_database.get(event.id);
             movePosition(item, (EventVector) event);
@@ -53,5 +56,16 @@ public class EventHandler {
         }
         item.setLocation(location);
         item.setMoves();
+    }
+
+    public float calculateMeanTime() {
+        if (eventTimes.isEmpty())
+            return 0;
+
+        float total = 0;
+        for (Long time : eventTimes)
+            total += time;
+
+        return total / eventTimes.size();
     }
 }

@@ -2,7 +2,7 @@ package org.example.EventAPI;
 
 import org.example.EventPrompts.Event;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 

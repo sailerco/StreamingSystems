@@ -9,7 +9,7 @@ import org.example.QuerySide.QueryModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +25,7 @@ class CommandImplTest {
         DomainModel.idsAndMoves.clear();
     }
     @Test
-    void createItem() throws JMSException, JsonProcessingException {
+    void createItem() throws JMSException {
         commandHandler.handle(new CommandCreateItem("Tom", new int[]{1, 2, 3}, 0));
         assertTrue(commandHandler.model.exists("Tom"));
 

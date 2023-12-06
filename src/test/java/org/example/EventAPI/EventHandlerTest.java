@@ -9,7 +9,7 @@ import org.example.QuerySide.QueryModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

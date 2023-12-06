@@ -7,7 +7,7 @@ import org.example.CommandPrompts.CommandMoveItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,21 +17,21 @@ class DomainModelTest {
     DomainModelTest() throws Exception {}
 
     @BeforeEach
-    public void setup() throws JMSException, JsonProcessingException {
+    public void setup() throws JMSException {
         DomainModel.idsAndMoves.clear();
         model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
         model.create(new CommandCreateItem("Bob", new int[]{0, 0, 0}, 0));
         DomainModel.idsAndMoves.put("Tom", 19);
     }
     @Test
-    public void createTest() throws JMSException, JsonProcessingException {
+    public void createTest() throws JMSException {
         assertTrue(model.exists("Tom"));
         model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
         //check if the key value was overwritten -> would be an error if it overwrites
         assertEquals(DomainModel.idsAndMoves.get("Tom"), 19);
     }
     @Test
-    public void moveItemTest() throws JMSException, JsonProcessingException {
+    public void moveItemTest() throws JMSException {
         model.moveItem(new CommandMoveItem("Tom", new int[]{1, 1, 4}));
         assertFalse(model.exists("Tom"));
 
@@ -45,7 +45,7 @@ class DomainModelTest {
     }
 
     @Test
-    public void deleteItem() throws JMSException, JsonProcessingException {
+    public void deleteItem() throws JMSException {
         model.remove(new CommandDeleteItem("Tom"));
         assertFalse(model.exists("Tom"));
     }

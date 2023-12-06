@@ -1,12 +1,12 @@
 package org.example.EventAPI;
 
-import javax.jms.TextMessage;
+import jakarta.jms.TextMessage;
 
 import org.joda.time.Instant;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
 
 public class Listener implements MessageListener {
 
