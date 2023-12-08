@@ -25,10 +25,16 @@ public class DomainModel {
 
     //The item will be added to the Maps and the Creation Event will be called.
     public void create(CommandCreateItem command) throws JMSException {
-        if (!exists(command.id)) {
+        String key = getKeyByPosition(command.location);
+        if (!exists(command.id) && (Arrays.equals(command.location, new int[]{0, 0, 0}) || !usedPositions.containsKey(key))) {
             idsAndMoves.put(command.id, 0);
             usedPositions.put(command.id, command.location);
             producer.sendMessage(new EventMovingItemCreated(command.id, command.location, command.value));
+        } else if (!exists(command.id) && usedPositions.containsKey(key)) {
+            storeEvent(new EventMovingItemCreatedOnUsedPosition(key, command.id, command.location, command.value));
+            removeFromHashes(key);
+            usedPositions.put(command.id, command.location);
+            idsAndMoves.put(command.id, 0);
         } else System.out.println("Item with id " + command.id + " already exists");
     }
 
