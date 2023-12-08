@@ -12,8 +12,6 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     implementation("ch.qos.logback:logback-classic:1.4.14")
-
-
     implementation("joda-time:joda-time:2.3")
     implementation("org.apache.activemq:activemq-broker:6.0.0")
     implementation("org.apache.activemq:activemq-kahadb-store:6.0.0")

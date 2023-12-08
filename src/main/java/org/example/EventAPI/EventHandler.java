@@ -1,5 +1,6 @@
 package org.example.EventAPI;
 
+import jakarta.jms.JMSException;
 import jakarta.jms.ObjectMessage;
 import org.example.ConnectionMQ;
 import org.example.EventPrompts.*;
@@ -17,8 +18,8 @@ public class EventHandler {
     private final List<Long> eventTimes = new ArrayList<>();
     ConnectionMQ connectionMQ;
 
-    public EventHandler() throws jakarta.jms.JMSException {
-        this.connectionMQ = new ConnectionMQ();
+    public EventHandler() throws JMSException {
+        this.connectionMQ = new ConnectionMQ("consumer");
     }
 
     public void processEvent() throws jakarta.jms.JMSException {
@@ -59,8 +60,7 @@ public class EventHandler {
     }
 
     public float calculateMeanTime() {
-        if (eventTimes.isEmpty())
-            return 0;
+        if (eventTimes.isEmpty()) return 0;
 
         float total = 0;
         for (Long time : eventTimes)

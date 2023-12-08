@@ -15,10 +15,10 @@ public class ConnectionMQ {
     private transient MessageProducer producer;
     private transient Destination itemTopic;
 
-    public ConnectionMQ() throws JMSException {
+    public ConnectionMQ(String username) throws JMSException {
         factory = new ActiveMQConnectionFactory(brokerUrl);
         factory.setTrustAllPackages(true);
-        connection = factory.createConnection("consumer", "password");
+        connection = factory.createConnection(username, "password");
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         // use publish-subscribe

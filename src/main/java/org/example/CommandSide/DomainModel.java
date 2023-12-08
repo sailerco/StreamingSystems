@@ -20,7 +20,7 @@ public class DomainModel {
     ConnectionMQ producer;
 
     public DomainModel() throws Exception {
-        this.producer = new ConnectionMQ();
+        this.producer = new ConnectionMQ("publisher");
     }
 
     //The item will be added to the Maps and the Creation Event will be called.
