@@ -15,8 +15,9 @@ public class ConnectionMQ {
     private transient MessageProducer producer;
     private transient Destination itemTopic;
 
-    public ConnectionMQ() throws JMSException, jakarta.jms.JMSException {
+    public ConnectionMQ() throws JMSException {
         factory = new ActiveMQConnectionFactory(brokerUrl);
+        factory.setTrustAllPackages(true);
         connection = factory.createConnection("consumer", "password");
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -48,4 +49,13 @@ public class ConnectionMQ {
             e.printStackTrace();
         }*/
     }
+
+    /*public void consumeMessageAsync() {
+        try {
+            consumer.setMessageListener(new Listener());
+            System.out.println(consumer.getClass());
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+    }*/
 }

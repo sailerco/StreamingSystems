@@ -50,7 +50,9 @@ public class Main {
         System.out.println("Producer to Consumer mean time was " + eventHandler.calculateMeanTime() + "ms");
         System.out.println("------ Query Side ------");
         for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
-            System.out.println("for loop: " + entry.getKey() + " : " + entry.getValue().getName() + ", " + entry.getValue().getValue() + ", " + Arrays.toString(entry.getValue().getLocation()) + ", " + entry.getValue().getNumberOfMoves());
+            System.out.println("for loop: " + entry.getKey() + " : " + entry.getValue().getName() + ", "
+                    + entry.getValue().getValue() + ", " + Arrays.toString(entry.getValue().getLocation()) + ", "
+                    + entry.getValue().getNumberOfMoves());
         }
         QueryHandler query = new QueryHandler();
         System.out.println(query.getMovingItemByName("Alice").getName());
