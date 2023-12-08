@@ -22,7 +22,7 @@ public class EventHandler {
         this.connectionMQ = new ConnectionMQ("consumer");
     }
 
-    public void processEvent() throws jakarta.jms.JMSException {
+    public void processMessage() throws jakarta.jms.JMSException {
         ObjectMessage eventMessage = (ObjectMessage) this.connectionMQ.consumeMessage();
         if (eventMessage.getObject() instanceof Event) {
             eventTimes.add((System.currentTimeMillis() - eventMessage.getLongProperty("timestamp")));

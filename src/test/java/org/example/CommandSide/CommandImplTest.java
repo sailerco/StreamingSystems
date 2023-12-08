@@ -48,9 +48,9 @@ class CommandImplTest {
         usedPositions.clear();
 
         commandHandler.handle(new CommandCreateItem("Bob"));
-        eventHandler.processEvent();
+        eventHandler.processMessage();
         commandHandler.handle(new CommandCreateItem("Tom", new int[]{1, 2, 3}, 0));
-        eventHandler.processEvent();
+        eventHandler.processMessage();
     }
 
     @Test
@@ -68,7 +68,7 @@ class CommandImplTest {
     @Test
     void moveItem() throws JMSException {
         commandHandler.handle(new CommandMoveItem("Bob", new int[]{0, 0, 2}));
-        eventHandler.processEvent();
+        eventHandler.processMessage();
 
         assertArrayEquals(new int[]{0, 0, 2}, usedPositions.get("Bob"));
         assertEquals(1, idsAndMoves.get("Bob"));
@@ -79,7 +79,7 @@ class CommandImplTest {
     @Test
     void moveCollision() throws JMSException {
         commandHandler.handle(new CommandMoveItem("Bob", new int[]{1, 2, 3}));
-        eventHandler.processEvent();
+        eventHandler.processMessage();
 
         assertArrayEquals(new int[]{1, 2, 3}, query_database.get("Bob").getLocation());
         assertArrayEquals(new int[]{1, 2, 3}, usedPositions.get("Bob"));
@@ -90,14 +90,14 @@ class CommandImplTest {
     @Test
     void changeValue() throws JMSException {
         commandHandler.handle(new CommandChangeValue("Bob", 5));
-        eventHandler.processEvent();
+        eventHandler.processMessage();
         assertEquals(5, query_database.get("Bob").getValue());
     }
 
     @Test
     void deleteItem() throws JMSException {
         commandHandler.handle(new CommandDeleteItem("Bob"));
-        eventHandler.processEvent();
+        eventHandler.processMessage();
         assertFalse(commandHandler.model.exists("Bob"));
         assertFalse(query_database.containsKey("Bob"));
     }

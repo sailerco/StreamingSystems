@@ -37,7 +37,7 @@ public class Main {
         Thread t = new Thread(() -> {
             while (true) {
                 try {
-                    eventHandler.processEvent();
+                    eventHandler.processMessage();
                 } catch (JMSException e) {
                     throw new RuntimeException(e);
                 }

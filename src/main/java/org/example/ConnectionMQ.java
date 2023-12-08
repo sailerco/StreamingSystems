@@ -2,6 +2,7 @@ package org.example;
 
 import jakarta.jms.*;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.example.EventAPI.Listener;
 import org.example.EventPrompts.Event;
 
 public class ConnectionMQ {
@@ -25,15 +26,16 @@ public class ConnectionMQ {
         itemTopic = session.createTopic(topic);
         // use point-2-point
         //itemTopic = session.createQueue(topic);
-        consumer = session.createConsumer(itemTopic);
-        producer = session.createProducer(itemTopic);
+        if (username.equals("consumer"))
+            consumer = session.createConsumer(itemTopic);
+        else
+            producer = session.createProducer(itemTopic);
     }
 
     public void sendMessage(Event event) throws JMSException {
         ObjectMessage message = session.createObjectMessage(event);
         message.setLongProperty("timestamp", System.currentTimeMillis());
         producer.send(message);
-
     }
 
     public void close() throws JMSException {
@@ -42,20 +44,10 @@ public class ConnectionMQ {
 
     public Message consumeMessage() throws JMSException {
         return consumer.receive();
-        /*try {
-            consumer.setMessageListener(new Listener());
-            System.out.println(consumer.getClass());
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }*/
     }
 
-    /*public void consumeMessageAsync() {
-        try {
-            consumer.setMessageListener(new Listener());
-            System.out.println(consumer.getClass());
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+    /*public void consumeMessageAsync() throws JMSException {
+        consumer.setMessageListener(new Listener());
+        System.out.println(consumer.getClass());
     }*/
 }
