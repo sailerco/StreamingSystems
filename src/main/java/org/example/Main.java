@@ -13,9 +13,6 @@ import static org.example.QuerySide.QueryModel.query_database;
 public class Main {
 
     public static void main(String[] args) {
-        //todo: item eventuell unglück beannt weil es ja nicht items speichert
-        // müssen den Namen ja immer selber merken und als String angeben
-        // gibt es ne Lösung wo es auch hier item sind?
         CommandImpl item = new CommandImpl();
         item.createItem("Tom", new int[]{1, 2, 3}, 0);
         item.moveItem("Tom", new int[]{2, 3, 4});

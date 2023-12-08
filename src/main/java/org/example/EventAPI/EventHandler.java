@@ -26,6 +26,11 @@ public class EventHandler {
             query_database.remove(event.id);
             MovingItemDTO item = query_database.get(((EventDeleteItemAndMoveAnotherItem) event).new_id);
             movePosition(item, (EventVector) event);
+        } else if(event instanceof EventMovingItemCreatedOnUsedPosition){
+            query_database.remove(event.id);
+            MovingItem item = ((EventMovingItemCreatedOnUsedPosition) event).item;
+            MovingItemDTO itemQuery = new MovingItemDTOImpl(item.getName(), item.getLocation(), item.getNumberOfMoves(), item.getValue());
+            query_database.put(((EventMovingItemCreatedOnUsedPosition) event).item.getName(), itemQuery);
         }
     }
 

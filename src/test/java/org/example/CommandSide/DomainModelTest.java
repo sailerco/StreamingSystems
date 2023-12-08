@@ -36,6 +36,15 @@ class DomainModelTest {
         model.create(new CommandCreateItem("Alice", new int[]{0, 0, 0}, 0));
         model.moveItem(new CommandMoveItem("Alice", new int[]{3, 4, 1}));
         assertFalse(model.exists("Bob"));
+
+        model.create(new CommandCreateItem("Otto", new int[]{3,4, 1}, 0));
+        assertFalse(model.exists("Alice"));
+        assertTrue(model.exists("Otto"));
+
+        model.create(new CommandCreateItem("Dora"));
+        model.create(new CommandCreateItem("Florian"));
+        assertTrue(model.exists("Dora"));
+        assertTrue(model.exists("Florian"));
     }
 
     @Test
