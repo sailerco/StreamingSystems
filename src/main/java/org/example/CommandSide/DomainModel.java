@@ -31,7 +31,7 @@ public class DomainModel {
             usedPositions.put(command.id, command.location);
             producer.sendMessage(new EventMovingItemCreated(command.id, command.location, command.value));
         } else if (!exists(command.id) && usedPositions.containsKey(key)) {
-            storeEvent(new EventMovingItemCreatedOnUsedPosition(key, command.id, command.location, command.value));
+            producer.sendMessage(new EventMovingItemCreatedOnUsedPosition(key, command.id, command.location, command.value));
             removeFromHashes(key);
             usedPositions.put(command.id, command.location);
             idsAndMoves.put(command.id, 0);
