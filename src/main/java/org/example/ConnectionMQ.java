@@ -2,7 +2,6 @@ package org.example;
 
 import jakarta.jms.*;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.example.EventAPI.Listener;
 import org.example.EventPrompts.Event;
 
 public class ConnectionMQ {
