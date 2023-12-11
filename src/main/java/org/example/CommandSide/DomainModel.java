@@ -17,10 +17,10 @@ public class DomainModel {
     public static final int MOVES_LIMIT = 20;
     public static Map<String, Integer> idsAndMoves = new HashMap<>();
     public static Map<String, int[]> usedPositions = new HashMap<>();
-    ConnectionMQ producer;
+    static ConnectionMQ producer;
 
     public DomainModel() throws Exception {
-        this.producer = new ConnectionMQ("publisher");
+        producer = new ConnectionMQ("publisher");
     }
 
     //The item will be added to the Maps and the Creation Event will be called.
@@ -112,5 +112,7 @@ public class DomainModel {
     public Boolean exists(String id) {
         return idsAndMoves.containsKey(id);
     }
-
+    static public void stop() throws JMSException {
+        producer.close();
+    }
 }

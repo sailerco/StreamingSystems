@@ -42,11 +42,9 @@ public class ConnectionMQ {
     }
 
     public Message consumeMessage() throws JMSException {
-        return consumer.receive();
+        if(connection != null)
+            return consumer.receive();
+        else
+            return null;
     }
-
-    /*public void consumeMessageAsync() throws JMSException {
-        consumer.setMessageListener(new Listener());
-        System.out.println(consumer.getClass());
-    }*/
 }

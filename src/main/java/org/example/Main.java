@@ -2,6 +2,7 @@ package org.example;
 
 import jakarta.jms.JMSException;
 import org.example.CommandSide.CommandImpl;
+import org.example.CommandSide.DomainModel;
 import org.example.EventAPI.EventHandler;
 import org.example.MovingItem.MovingItemDTO;
 import org.example.QuerySide.QueryHandler;
@@ -64,6 +65,10 @@ public class Main {
         item.createItem("Otto", new int[]{0, 0, 3}, 0);
         item.createItem("Bob");
         item.moveItem("Bob", new int[]{0, 0, 3});*/
+
+        DomainModel.stop();
+        EventHandler.stop();
+        broker.stopBroker();
     }
 
     public static void queryGetAll(QueryHandler query) {

@@ -16,14 +16,18 @@ import static org.example.QuerySide.QueryModel.query_database;
 //projeziert daten auf das Query Model
 public class EventHandler {
     private final List<Long> eventTimes = new ArrayList<>();
-    ConnectionMQ connectionMQ;
+    static ConnectionMQ connectionMQ;
 
     public EventHandler() throws JMSException {
-        this.connectionMQ = new ConnectionMQ("consumer");
+        connectionMQ = new ConnectionMQ("consumer");
+    }
+
+    static public void stop() throws JMSException {
+        connectionMQ.close();
     }
 
     public void processMessage() throws jakarta.jms.JMSException {
-        ObjectMessage eventMessage = (ObjectMessage) this.connectionMQ.consumeMessage();
+        ObjectMessage eventMessage = (ObjectMessage) connectionMQ.consumeMessage();
         if (eventMessage.getObject() instanceof Event) {
             eventTimes.add((System.currentTimeMillis() - eventMessage.getLongProperty("timestamp")));
             consumeEvent((Event) eventMessage.getObject());
