@@ -4,6 +4,7 @@ import jakarta.jms.JMSException;
 import org.example.CommandSide.CommandImpl;
 import org.example.CommandSide.DomainModel;
 import org.example.EventAPI.EventHandler;
+import org.example.EventPrompts.EventMovingItemCreated;
 import org.example.MovingItem.MovingItemDTO;
 import org.example.QuerySide.QueryHandler;
 
@@ -17,14 +18,10 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        Broker broker = new Broker();
-        broker.startBroker();
-        EventHandler eventHandler = new EventHandler();
+        /*Producer p = new Producer();
 
-        //TODO: Tests schreiben / fixen
-        //TODO: Refactoring
-
-        System.out.println("Processing Data...");
+        p.sendObjectMessage("ItemCreated", new EventMovingItemCreated("Bob", new int[]{0,0,0}, 0));
+        p.sendObjectMessage("Alice", new EventMovingItemCreated("Bob", new int[]{0,0,0}, 0));*/
         CommandImpl item = new CommandImpl();
         item.createItem("Tom", new int[]{1, 2, 3}, 0);
         item.changeValue("Tom", 7);
@@ -34,6 +31,18 @@ public class Main {
         item.createItem("Bob");
         item.deleteItem("Bob");
         item.createItem("Otto");
+
+        Consumer c = new Consumer("Event");
+        c.getEvent();
+        c.close();
+        Thread.sleep(10000);
+
+        //p.sendMessage("Bob", "Bobby");
+
+        /*
+        Broker broker = new Broker();
+        broker.startBroker();
+        EventHandler eventHandler = new EventHandler();
 
         Thread t = new Thread(() -> {
             while (true) {
@@ -66,9 +75,10 @@ public class Main {
         item.createItem("Bob");
         item.moveItem("Bob", new int[]{0, 0, 3});*/
 
+        /*
         DomainModel.stop();
         EventHandler.stop();
-        broker.stopBroker();
+        broker.stopBroker(); */
     }
 
     public static void queryGetAll(QueryHandler query) {

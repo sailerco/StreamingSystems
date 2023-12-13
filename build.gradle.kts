@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation("org.apache.kafka:kafka-clients:3.6.1")
+    implementation("org.apache.kafka:kafka_2.13:3.6.1")
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     implementation("ch.qos.logback:logback-classic:1.4.14")
     implementation("joda-time:joda-time:2.3")
