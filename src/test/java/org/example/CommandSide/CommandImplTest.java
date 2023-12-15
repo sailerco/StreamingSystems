@@ -1,7 +1,6 @@
 package org.example.CommandSide;
 
 import jakarta.jms.JMSException;
-import org.example.Broker;
 import org.example.CommandPrompts.CommandChangeValue;
 import org.example.CommandPrompts.CommandCreateItem;
 import org.example.CommandPrompts.CommandDeleteItem;
@@ -12,11 +11,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.example.CommandSide.DomainModel.idsAndMoves;
-import static org.example.CommandSide.DomainModel.usedPositions;
 import static org.example.QuerySide.QueryModel.query_database;
 import static org.junit.jupiter.api.Assertions.*;
 
+//TODO: change the tests that it works without the idsAndMoves, usedPositions and Broker
 class CommandImplTest {
 
     static Broker broker;
@@ -28,7 +26,7 @@ class CommandImplTest {
 
     @BeforeAll
     static void start() throws Exception {
-        broker = new Broker();
+        broker = new Broker(); //use env.start() instead
         broker.startBroker();
     }
 

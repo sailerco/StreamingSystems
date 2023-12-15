@@ -1,7 +1,5 @@
 package org.example.EventAPI;
 
-import jakarta.jms.JMSException;
-import org.example.Broker;
 import org.example.EventPrompts.*;
 import org.example.MovingItem.MovingItemDTOImpl;
 import org.junit.jupiter.api.AfterAll;
@@ -9,28 +7,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.example.Main.env;
 import static org.example.QuerySide.QueryModel.query_database;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EventHandlerTest {
 
-    static Broker broker;
-
     EventHandler handler = new EventHandler();
 
-    EventHandlerTest() throws JMSException {
+    EventHandlerTest() {
     }
 
     @BeforeAll
-    static void start() throws Exception {
-        broker = new Broker();
-        broker.startBroker();
+    static void start() {
+        env.start();
     }
 
     @AfterAll
-    static void finish() throws Exception {
+    static void finish() {
         query_database.clear();
-        broker.stopBroker();
+        env.close();
     }
 
     @BeforeEach

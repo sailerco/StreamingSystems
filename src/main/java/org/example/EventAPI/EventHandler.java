@@ -17,6 +17,8 @@ public class EventHandler {
     private final Consumer consumer = new Consumer(false);
 
     public void processMessage() throws jakarta.jms.JMSException {
+        //TODO: maybe implement that we get the timestamp.
+        // Might have to change the getEvent Method or create a new one, because currently it just returns the events
         List<Event> events = consumer.getEvent(100);
         for (Event event : events) {
             consumeEvent(event);

@@ -1,6 +1,5 @@
 package org.example.CommandSide;
 
-import org.example.Broker;
 import org.example.CommandPrompts.CommandCreateItem;
 import org.example.CommandPrompts.CommandDeleteItem;
 import org.example.CommandPrompts.CommandMoveItem;
@@ -10,11 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import jakarta.jms.JMSException;
-
-import static org.example.CommandSide.DomainModel.idsAndMoves;
-import static org.example.CommandSide.DomainModel.usedPositions;
 import static org.junit.jupiter.api.Assertions.*;
 
+//TODO: change the tests that it works without the idsAndMoves, usedPositions and Broker
 class DomainModelTest {
     static Broker broker;
     DomainModel model = new DomainModel();
@@ -24,7 +21,7 @@ class DomainModelTest {
 
     @BeforeAll
     static void start() throws Exception {
-        broker = new Broker();
+        broker = new Broker(); //TODO: instead of Broker work with env.start()
         broker.startBroker();
     }
 
@@ -40,7 +37,7 @@ class DomainModelTest {
         idsAndMoves.clear();
         model.createItem(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
         model.createItem(new CommandCreateItem("Bob", new int[]{0, 0, 0}, 0));
-        idsAndMoves.put("Tom", 19);
+        idsAndMoves.put("Tom", 19); //maybe we should reduce the MOVES_LIMIT for testing purposes
     }
 
     @Test

@@ -13,10 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DomainModel {
-
     public static final int MOVES_LIMIT = 20;
-    //public static Map<String, Integer> idsAndMoves = new HashMap<>();
-    //public static Map<String, int[]> usedPositions = new HashMap<>();
     public static Producer producer = new Producer();
     public static Consumer consumer = new Consumer(true);
 
@@ -65,7 +62,6 @@ public class DomainModel {
     }
 
     //the following methods are helper functions
-
     private void handleCollisionAndMove(String collidedItem, String movedItem, int[] position) {
         System.out.println(collidedItem + " will be removed and " + movedItem + " will be moved to position " + Arrays.toString(position));
         producer.sendObjectMessage(movedItem, new EventDeleteItemAndMoveAnotherItem(collidedItem, movedItem, position));
@@ -107,6 +103,7 @@ public class DomainModel {
         return result;
     }
 
+    //TODO: mach das nur pro call ans domain model nur ein Mal retrieveEvents aufgerufen wird
     //retrieves events through consumer
     private List<Event> retrieveEvents() {
         return consumer.getEvent(1000);
@@ -170,6 +167,7 @@ public class DomainModel {
     private boolean movedOverLimit(String id) {
         int moves = 0;
         List<Event> events = retrieveEvents();
+        //TODO: check through tests if everything works accordingly
         for (Event event : events) {
             if (event.id.equals(id)) {
                 boolean itemWasDeleted = itemWasDeleted(event, id);

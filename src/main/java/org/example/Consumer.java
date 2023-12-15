@@ -45,8 +45,6 @@ public class Consumer {
     private Properties getKafkaProperties() {
         Properties props = new Properties();
         props.put("bootstrap.servers", bootstrapServers);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.example.EventPrompts.EventDeserializer");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());

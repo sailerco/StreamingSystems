@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    //https://github.com/navikt/kafka-embedded-env
     implementation("no.nav:kafka-embedded-env:3.2.4")
     implementation("org.apache.kafka:kafka-clients:3.6.1")
     implementation("org.apache.kafka:kafka_2.13:3.6.1")
