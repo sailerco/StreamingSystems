@@ -1,8 +1,6 @@
 package org.example.EventAPI;
 
-import jakarta.jms.JMSException;
-import jakarta.jms.ObjectMessage;
-import org.example.ConnectionMQ;
+import org.example.Consumer;
 import org.example.EventPrompts.*;
 import org.example.MovingItem.MovingItem;
 import org.example.MovingItem.MovingItemDTO;
@@ -16,21 +14,12 @@ import static org.example.QuerySide.QueryModel.query_database;
 //projeziert daten auf das Query Model
 public class EventHandler {
     private final List<Long> eventTimes = new ArrayList<>();
-    static ConnectionMQ connectionMQ;
-
-    public EventHandler() throws JMSException {
-        connectionMQ = new ConnectionMQ("consumer");
-    }
-
-    static public void stop() throws JMSException {
-        connectionMQ.close();
-    }
+    private final Consumer consumer = new Consumer(false);
 
     public void processMessage() throws jakarta.jms.JMSException {
-        ObjectMessage eventMessage = (ObjectMessage) connectionMQ.consumeMessage();
-        if (eventMessage.getObject() instanceof Event) {
-            eventTimes.add((System.currentTimeMillis() - eventMessage.getLongProperty("timestamp")));
-            consumeEvent((Event) eventMessage.getObject());
+        List<Event> events = consumer.getEvent(100);
+        for (Event event : events) {
+            consumeEvent(event);
         }
     }
 
@@ -51,7 +40,7 @@ public class EventHandler {
             query_database.remove(event.id);
             MovingItemDTO item = query_database.get(((EventDeleteItemAndMoveAnotherItem) event).new_id);
             movePosition(item, (EventVector) event);
-        } else if(event instanceof EventMovingItemCreatedOnUsedPosition){
+        } else if (event instanceof EventMovingItemCreatedOnUsedPosition) {
             query_database.remove(event.id);
             MovingItem item = ((EventMovingItemCreatedOnUsedPosition) event).item;
             MovingItemDTO itemQuery = new MovingItemDTOImpl(item.getName(), item.getLocation(), item.getNumberOfMoves(), item.getValue());

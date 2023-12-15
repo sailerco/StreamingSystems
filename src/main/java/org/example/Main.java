@@ -1,47 +1,36 @@
 package org.example;
 
 import jakarta.jms.JMSException;
+import no.nav.common.KafkaEnvironment;
 import org.example.CommandSide.CommandImpl;
-import org.example.CommandSide.DomainModel;
 import org.example.EventAPI.EventHandler;
-import org.example.EventPrompts.EventMovingItemCreated;
 import org.example.MovingItem.MovingItemDTO;
 import org.example.QuerySide.QueryHandler;
 
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Map;
+import java.util.Properties;
 
-import static org.example.QuerySide.QueryModel.query_database;
+import static java.util.Collections.emptyList;
 
 public class Main {
 
+    //used for embedded -> don't have to use Docker for the Connection
+    public static KafkaEnvironment env = new KafkaEnvironment(
+            1,
+            Arrays.asList("Event"),
+            emptyList(),
+            false,
+            false,
+            emptyList(),
+            false,
+            new Properties()
+    );
+
     public static void main(String[] args) throws Exception {
+        //TODO: Update the Tests
+        env.start(); //for embedded
 
-        /*Producer p = new Producer();
-
-        p.sendObjectMessage("ItemCreated", new EventMovingItemCreated("Bob", new int[]{0,0,0}, 0));
-        p.sendObjectMessage("Alice", new EventMovingItemCreated("Bob", new int[]{0,0,0}, 0));*/
-        CommandImpl item = new CommandImpl();
-        item.createItem("Tom", new int[]{1, 2, 3}, 0);
-        item.changeValue("Tom", 7);
-        item.moveItem("Tom", new int[]{2, 3, 4});
-        item.createItem("Alice");
-        item.moveItem("Alice", new int[]{3, 5, 7});
-        item.createItem("Bob");
-        item.deleteItem("Bob");
-        item.createItem("Otto");
-
-        Consumer c = new Consumer("Event");
-        c.getEvent();
-        c.close();
-        Thread.sleep(10000);
-
-        //p.sendMessage("Bob", "Bobby");
-
-        /*
-        Broker broker = new Broker();
-        broker.startBroker();
         EventHandler eventHandler = new EventHandler();
 
         Thread t = new Thread(() -> {
@@ -55,30 +44,25 @@ public class Main {
         });
         t.start();
 
-        Thread.sleep(1000);
-        System.out.println("------");
-        System.out.println("Producer to Consumer mean time was " + eventHandler.calculateMeanTime() + "ms");
-        System.out.println("------ Query Side ------");
-        for (Map.Entry<String, MovingItemDTO> entry : query_database.entrySet()) {
-            System.out.println("for loop: " + entry.getKey() + " : " + entry.getValue().getName() + ", "
-                    + entry.getValue().getValue() + ", " + Arrays.toString(entry.getValue().getLocation()) + ", "
-                    + entry.getValue().getNumberOfMoves());
-        }
-        QueryHandler query = new QueryHandler();
-        System.out.println(query.getMovingItemByName("Alice").getName());
-        queryGetAll(query);
-        queryAtPosition(query, new int[]{3, 5, 7});
+        Thread.sleep(5000);
+        CommandImpl item = new CommandImpl();
+        item.createItem("Alice");
+        item.moveItem("Alice", new int[]{3, 5, 7});
+        item.createItem("Tom", new int[]{1, 2, 3}, 0);
+        item.changeValue("Tom", 7);
+        item.moveItem("Tom", new int[]{2, 3, 4});
+        item.createItem("Lisa", new int[]{3, 5, 7}, 0);
 
-        //item.changeValue("Tom", 7);
-        /*item.createItem("Lisa", new int[]{6, 7, 8}, 0);
-        item.createItem("Otto", new int[]{0, 0, 3}, 0);
+        /*item.createItem("Otto", new int[]{0, 0, 3}, 0);
         item.createItem("Bob");
         item.moveItem("Bob", new int[]{0, 0, 3});*/
 
-        /*
-        DomainModel.stop();
-        EventHandler.stop();
-        broker.stopBroker(); */
+        Thread.sleep(1000);
+        QueryHandler query = new QueryHandler();
+        //System.out.println(query.getMovingItemByName("Tom").getName());
+        queryGetAll(query);
+        queryAtPosition(query, new int[]{3, 5, 7});
+
     }
 
     public static void queryGetAll(QueryHandler query) {

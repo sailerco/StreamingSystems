@@ -38,15 +38,15 @@ class DomainModelTest {
     @BeforeEach
     public void setup() throws JMSException {
         idsAndMoves.clear();
-        model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
-        model.create(new CommandCreateItem("Bob", new int[]{0, 0, 0}, 0));
+        model.createItem(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
+        model.createItem(new CommandCreateItem("Bob", new int[]{0, 0, 0}, 0));
         idsAndMoves.put("Tom", 19);
     }
 
     @Test
     public void createTest() throws JMSException {
         assertTrue(model.exists("Tom"));
-        model.create(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
+        model.createItem(new CommandCreateItem("Tom", new int[]{0, 0, 0}, 0));
         //check if the key value was overwritten -> would be an error if it overwrites
         assertEquals(idsAndMoves.get("Tom"), 19);
     }
@@ -60,23 +60,23 @@ class DomainModelTest {
         assertTrue(model.exists("Bob"));
         assertEquals(idsAndMoves.get("Bob"), 1);
 
-        model.create(new CommandCreateItem("Alice", new int[]{0, 0, 0}, 0));
+        model.createItem(new CommandCreateItem("Alice", new int[]{0, 0, 0}, 0));
         model.moveItem(new CommandMoveItem("Alice", new int[]{3, 4, 1}));
         assertFalse(model.exists("Bob"));
 
-        model.create(new CommandCreateItem("Otto", new int[]{3,4, 1}, 0));
+        model.createItem(new CommandCreateItem("Otto", new int[]{3,4, 1}, 0));
         assertFalse(model.exists("Alice"));
         assertTrue(model.exists("Otto"));
 
-        model.create(new CommandCreateItem("Dora"));
-        model.create(new CommandCreateItem("Florian"));
+        model.createItem(new CommandCreateItem("Dora"));
+        model.createItem(new CommandCreateItem("Florian"));
         assertTrue(model.exists("Dora"));
         assertTrue(model.exists("Florian"));
     }
 
     @Test
     public void deleteItem() throws JMSException {
-        model.remove(new CommandDeleteItem("Tom"));
+        model.removeItem(new CommandDeleteItem("Tom"));
         assertFalse(model.exists("Tom"));
     }
 }

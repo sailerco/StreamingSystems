@@ -1,6 +1,5 @@
 package org.example.CommandSide;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.CommandPrompts.*;
 
 import jakarta.jms.JMSException;
@@ -21,7 +20,7 @@ public class CommandHandler {
     }
 
     public void handle(CommandCreateItem command) throws JMSException {
-        model.create(command);
+        model.createItem(command);
     }
 
     public void handle(CommandMoveItem command) throws JMSException {
@@ -32,6 +31,6 @@ public class CommandHandler {
         model.changeValue(command);
     }
     public void handle(CommandDeleteItem command) throws JMSException {
-        model.remove(command);
+        model.removeItem(command);
     }
 }
