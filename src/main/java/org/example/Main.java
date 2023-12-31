@@ -30,7 +30,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         //TODO: Update the Tests
         env.start(); //for embedded
-
         EventHandler eventHandler = new EventHandler();
 
         Thread t = new Thread(() -> {
@@ -43,8 +42,8 @@ public class Main {
             }
         });
         t.start();
-
         Thread.sleep(5000);
+
         CommandImpl item = new CommandImpl();
         item.createItem("Alice");
         item.moveItem("Alice", new int[]{3, 5, 7});
@@ -52,7 +51,6 @@ public class Main {
         item.changeValue("Tom", 7);
         item.moveItem("Tom", new int[]{2, 3, 4});
         item.createItem("Lisa", new int[]{3, 5, 7}, 0);
-
         /*item.createItem("Otto", new int[]{0, 0, 3}, 0);
         item.createItem("Bob");
         item.moveItem("Bob", new int[]{0, 0, 3});*/

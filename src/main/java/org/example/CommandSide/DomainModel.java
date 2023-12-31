@@ -13,12 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DomainModel {
-    public static final int MOVES_LIMIT = 20;
+    public static int MOVES_LIMIT = 20;
     public static Producer producer = new Producer();
     public static Consumer consumer = new Consumer(true);
+    List<Event> events;
 
     //The item will be added to the Maps and the Creation Event will be called.
     public void createItem(CommandCreateItem command) {
+        events = retrieveEvents();
         String key = checkIfPositionIsUsed(command.location);
         if (!exists(command.id) && (Arrays.equals(command.location, new int[]{0, 0, 0}) || key == null)) {
             producer.sendObjectMessage(command.id, new EventMovingItemCreated(command.id, command.location, command.value));
@@ -29,6 +31,7 @@ public class DomainModel {
 
     //If the item exists the value will be changed
     public void changeValue(CommandChangeValue command) {
+        events = retrieveEvents();
         if (exists(command.id)) {
             producer.sendObjectMessage(command.id, new EventMovingItemChangedValue(command.id, command.newValue));
         } else System.out.println("Item with id " + command.id + " doesn't exist and therefore cannot be changed");
@@ -36,6 +39,7 @@ public class DomainModel {
 
     //If the item exists HashMaps will be updated and the Deletion Event will be called.
     public void removeItem(CommandPrompt command) {
+        events = retrieveEvents();
         if (exists(command.id)) {
             producer.sendObjectMessage(command.id, new EventMovingItemDeleted(command.id));
         } else System.out.println("Item with id " + command.id + " doesn't exist and therefore cannot be deleted");
@@ -46,9 +50,10 @@ public class DomainModel {
     // and it's not moved more than 20 times.
     // It then moves the item and handles collisions.*//
     public void moveItem(CommandMoveItem command) {
+        events = retrieveEvents();
         if (exists(command.id) && !Arrays.equals(command.vector, new int[]{0, 0, 0})) {
             if (!movedOverLimit(command.id)) {
-                int[] newPosition = computePosition(getPosition(command.id, retrieveEvents()), command.vector);
+                int[] newPosition = computePosition(getPosition(command.id), command.vector);
                 String key = checkIfPositionIsUsed(newPosition);
                 if (key != null)
                     handleCollisionAndMove(key, command.id, command.vector);
@@ -77,40 +82,37 @@ public class DomainModel {
 
     //checks the existence of an ID
     public Boolean exists(String id) {
-        boolean result = false;
-        List<Event> events = retrieveEvents(); //hier maybe 100 statt 1000ms
-        for (Event event : events) {
-            if (event.id.equals(id)) {
-                if (event instanceof EventMovingItemCreated) {
-                    result = true;
-                } else if (event instanceof EventMovingItemDeleted) {
-                    result = false;
-                }
-            }
-            if (event instanceof EventMovingItemCreatedOnUsedPosition
-                    || event instanceof EventDeleteItemAndMoveAnotherItem) {
-                if (event.id.equals(id)) {
-                    result = false;
-                } else if (event instanceof EventMovingItemCreatedOnUsedPosition
-                        && ((EventMovingItemCreatedOnUsedPosition) event).new_id.equals(id)) {
-                    result = true;
-                } else if (event instanceof EventDeleteItemAndMoveAnotherItem
-                        && ((EventDeleteItemAndMoveAnotherItem) event).new_id.equals(id)) {
-                    result = true;
-                }
-            }
-        }
-        return result;
+        return retrieveIDs().contains(id);
     }
 
-    //TODO: mach das nur pro call ans domain model nur ein Mal retrieveEvents aufgerufen wird
+    //Retrieves all IDs that currently exist, through Events
+    private List<String> retrieveIDs() {
+        List<String> ids = new ArrayList<>();
+        for (Event event : events) {
+            if (event instanceof EventMovingItemCreated) {
+                ids.add(event.id);
+            } else if (event instanceof EventMovingItemDeleted) {
+                ids.remove(event.id);
+            } else if (event instanceof EventMovingItemCreatedOnUsedPosition) {
+                ids.remove(event.id);
+                ids.add(((EventMovingItemCreatedOnUsedPosition) event).new_id);
+            } else if (event instanceof EventDeleteItemAndMoveAnotherItem) {
+                ids.remove(event.id);
+            }
+        }
+        return ids;
+    }
+
     //retrieves events through consumer
     private List<Event> retrieveEvents() {
-        return consumer.getEvent(1000);
+        List<Event> e = consumer.getEvent(1000);
+        System.out.println("hi");
+        System.out.println(e);
+        return e;
     }
 
     //get the Position of a specific id, through event iteration
-    private int[] getPosition(String id, List<Event> events) {
+    private int[] getPosition(String id) {
         int[] result = new int[3];
         for (Event event : events) {
             if (event.id.equals(id)) {
@@ -134,23 +136,6 @@ public class DomainModel {
         return result;
     }
 
-    //Retrieves all IDs that currently exist, through Events
-    private List<String> retrieveIDs(List<Event> events) {
-        List<String> ids = new ArrayList<>();
-        for (Event event : events) {
-            if (event instanceof EventMovingItemCreated) {
-                ids.add(event.id);
-            } else if (event instanceof EventMovingItemDeleted) {
-                ids.remove(event.id);
-            } else if (event instanceof EventMovingItemCreatedOnUsedPosition) {
-                ids.remove(event.id);
-                ids.add(((EventMovingItemCreatedOnUsedPosition) event).new_id);
-            } else if (event instanceof EventDeleteItemAndMoveAnotherItem) {
-                ids.remove(event.id);
-            }
-        }
-        return ids;
-    }
 
     //checks if the Item with the id was deleted through an Event
     private boolean itemWasDeleted(Event event, String id) {
@@ -166,7 +151,6 @@ public class DomainModel {
     //if the item was moved too many times it will be removed.
     private boolean movedOverLimit(String id) {
         int moves = 0;
-        List<Event> events = retrieveEvents();
         //TODO: check through tests if everything works accordingly
         for (Event event : events) {
             if (event.id.equals(id)) {
@@ -185,11 +169,10 @@ public class DomainModel {
 
     //check if an item occupies the target position
     private String checkIfPositionIsUsed(int[] targetPosition) {
-        List<Event> events = retrieveEvents();
-        List<String> ids = retrieveIDs(events);
+        List<String> ids = retrieveIDs();
         List<int[]> positions = new ArrayList<>();
         for (String name : ids) {
-            positions.add(getPosition(name, events));
+            positions.add(getPosition(name));
         }
         for (int i = 0; i <= positions.size() - 1; i++) {
             if (Arrays.equals(positions.get(i), targetPosition)) {

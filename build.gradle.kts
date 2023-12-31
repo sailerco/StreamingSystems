@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.mockito:mockito-core:5.8.0")
+
     //https://github.com/navikt/kafka-embedded-env
     implementation("no.nav:kafka-embedded-env:3.2.4")
     implementation("org.apache.kafka:kafka-clients:3.6.1")
