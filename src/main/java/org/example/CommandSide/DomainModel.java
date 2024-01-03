@@ -105,10 +105,7 @@ public class DomainModel {
 
     //retrieves events through consumer
     private List<Event> retrieveEvents() {
-        List<Event> e = consumer.getEvent(1000);
-        System.out.println("hi");
-        System.out.println(e);
-        return e;
+        return consumer.getEvent(1000);
     }
 
     //get the Position of a specific id, through event iteration
@@ -151,20 +148,21 @@ public class DomainModel {
     //if the item was moved too many times it will be removed.
     private boolean movedOverLimit(String id) {
         int moves = 0;
-        //TODO: check through tests if everything works accordingly
         for (Event event : events) {
             if (event.id.equals(id)) {
                 boolean itemWasDeleted = itemWasDeleted(event, id);
                 if (event instanceof EventMovingItemCreated || itemWasDeleted) {
                     moves = 0;
-                } else if (!itemWasDeleted && (event instanceof EventMovingItemMoved
-                        || event instanceof EventMovingItemCreatedOnUsedPosition
-                        || event instanceof EventDeleteItemAndMoveAnotherItem)) {
-                    moves += 1;
-                }
+                } else moves += 1;
+            } else if (event instanceof EventDeleteItemAndMoveAnotherItem
+                    && ((EventDeleteItemAndMoveAnotherItem) event).new_id.equals(id)) {
+                moves += 1;
+            } else if (event instanceof EventMovingItemCreatedOnUsedPosition
+                    && ((EventMovingItemCreatedOnUsedPosition) event).new_id.equals(id)) {
+                moves += 1;
             }
         }
-        return (moves + 1) >= MOVES_LIMIT;
+        return moves >= MOVES_LIMIT;
     }
 
     //check if an item occupies the target position

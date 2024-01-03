@@ -1,11 +1,12 @@
 package org.example.CommandSide;
 
-import jakarta.jms.JMSException;
 import org.example.CommandPrompts.CommandCreateItem;
 import org.example.CommandPrompts.CommandDeleteItem;
 import org.example.CommandPrompts.CommandMoveItem;
 import org.example.Consumer;
-import org.example.EventPrompts.*;
+import org.example.EventPrompts.Event;
+import org.example.EventPrompts.EventMovingItemCreated;
+import org.example.EventPrompts.EventMovingItemMoved;
 import org.example.Producer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,17 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-//TODO: change the tests that it works without the idsAndMoves, usedPositions and Broker
 class DomainModelTest {
     static List<Event> events = new ArrayList<>(Arrays.asList(new EventMovingItemCreated("Alice", new int[]{0, 0, 0}, 0),
-            new EventMovingItemMoved("Alice", new int[]{3, 5, 7}),
-            new EventMovingItemCreated("Tom", new int[]{1, 2, 3}, 0),
-            new EventMovingItemChangedValue("Tom", 7),
-            new EventDeleteItemAndMoveAnotherItem("Alice", "Tom", new int[]{2, 3, 4}),
-            new EventMovingItemCreatedOnUsedPosition("Tom", "Lisa", new int[]{3, 5, 7}, 0)
+            new EventMovingItemMoved("Alice", new int[]{3, 5, 7})
     ));
     static Producer p = mock(Producer.class);
-    ;
+
     static Consumer c = mock(Consumer.class);
     DomainModel model = new DomainModel();
 
@@ -50,12 +46,9 @@ class DomainModelTest {
     @AfterEach
     void cleanUp() {
         events.clear();
-        events.addAll(new ArrayList<>(Arrays.asList(new EventMovingItemCreated("Alice", new int[]{0, 0, 0}, 0),
-                new EventMovingItemMoved("Alice", new int[]{3, 5, 7}),
-                new EventMovingItemCreated("Tom", new int[]{1, 2, 3}, 0),
-                new EventMovingItemChangedValue("Tom", 7),
-                new EventDeleteItemAndMoveAnotherItem("Alice", "Tom", new int[]{2, 3, 4}),
-                new EventMovingItemCreatedOnUsedPosition("Tom", "Lisa", new int[]{3, 5, 7}, 0)
+        events.addAll(new ArrayList<>(Arrays.asList(
+                new EventMovingItemCreated("Alice", new int[]{0, 0, 0}, 0),
+                new EventMovingItemMoved("Alice", new int[]{3, 5, 7})
         )));
     }
 
@@ -67,36 +60,23 @@ class DomainModelTest {
 
     @Test
     public void moveItemTest() {
-
-        model.createItem(new CommandCreateItem("Otto", new int[]{0, 0, 0}, 0));
+        DomainModel.MOVES_LIMIT = 2;
+        model.createItem(new CommandCreateItem("Bob", new int[]{2, 3, 4}, 0));
+        model.createItem(new CommandCreateItem("Otto", new int[]{2, 3, 4}, 0));
         assertTrue(model.exists("Otto"));
-
-        //TODO: Finish tests
-
-/*        model.moveItem(new CommandMoveItem("Tom", new int[]{1, 1, 4}));
-        assertFalse(model.exists("Tom"));
-
-        model.moveItem(new CommandMoveItem("Bob", new int[]{3, 4, 1}));
-        assertTrue(model.exists("Bob"));
-        assertEquals(idsAndMoves.get("Bob"), 1);
-
-        model.createItem(new CommandCreateItem("Alice", new int[]{0, 0, 0}, 0));
-        model.moveItem(new CommandMoveItem("Alice", new int[]{3, 4, 1}));
         assertFalse(model.exists("Bob"));
 
-        model.createItem(new CommandCreateItem("Otto", new int[]{3, 4, 1}, 0));
-        assertFalse(model.exists("Alice"));
+        model.moveItem(new CommandMoveItem("Otto", new int[]{1, 2, 3}));
         assertTrue(model.exists("Otto"));
+        assertFalse(model.exists("Alice"));
 
-        model.createItem(new CommandCreateItem("Dora"));
-        model.createItem(new CommandCreateItem("Florian"));
-        assertTrue(model.exists("Dora"));
-        assertTrue(model.exists("Florian"));*/
+        model.moveItem(new CommandMoveItem("Otto", new int[]{3, 5, 7}));
+        assertFalse(model.exists("Otto"));
     }
 
     @Test
-    public void deleteItem() throws JMSException {
-        model.removeItem(new CommandDeleteItem("Tom"));
-        assertFalse(model.exists("Tom"));
+    public void deleteItem() {
+        model.removeItem(new CommandDeleteItem("Alice"));
+        assertFalse(model.exists("Alice"));
     }
 }
