@@ -51,33 +51,24 @@ public class Main {
         item.changeValue("Tom", 7);
         item.moveItem("Tom", new int[]{2, 3, 4});
         item.createItem("Lisa", new int[]{3, 5, 7}, 0);
-        /*item.createItem("Otto", new int[]{0, 0, 3}, 0);
-        item.createItem("Bob");
-        item.moveItem("Bob", new int[]{0, 0, 3});*/
 
         Thread.sleep(1000);
         QueryHandler query = new QueryHandler();
-        //System.out.println(query.getMovingItemByName("Tom").getName());
-        queryGetAll(query);
-        queryAtPosition(query, new int[]{3, 5, 7});
-
-    }
-
-    public static void queryGetAll(QueryHandler query) {
-        System.out.println("All items:");
-        Enumeration<MovingItemDTO> allItems = query.getMovingItems();
-        while (allItems.hasMoreElements()) {
-            MovingItemDTO itemsIteration = allItems.nextElement();
-            System.out.println(itemsIteration.getName() + ", " + itemsIteration.getValue() + ", " + Arrays.toString(itemsIteration.getLocation()) + ", " + itemsIteration.getNumberOfMoves());
-        }
-    }
-
-    public static void queryAtPosition(QueryHandler query, int[] position) {
         System.out.println("Item at position:");
-        Enumeration<MovingItemDTO> itemsAtPosition = query.getMovingItemsAtPosition(position);
-        while (itemsAtPosition.hasMoreElements()) {
-            MovingItemDTO itemAtPosition = itemsAtPosition.nextElement();
-            System.out.println(itemAtPosition.getName() + ", " + itemAtPosition.getValue() + ", " + Arrays.toString(itemAtPosition.getLocation()) + ", " + itemAtPosition.getNumberOfMoves());
+        printMovingItems(query.getMovingItemsAtPosition(new int[]{3, 5, 7}));
+        MovingItemDTO itemByName = query.getMovingItemByName("Lisa");
+        System.out.println("Item by Name Lisa: " + itemByName.getName() + ", " + itemByName.getValue() + ", " + Arrays.toString(itemByName.getLocation()) + ", " + itemByName.getNumberOfMoves());
+
+        System.out.println("All items:");
+        printMovingItems(query.getMovingItems());
+
+        System.out.println("The average time to send->receive a message was " + eventHandler.calculateMeanTime() + "ms");
+    }
+
+    private static void printMovingItems(Enumeration<MovingItemDTO> items) {
+        while (items.hasMoreElements()) {
+            MovingItemDTO item = items.nextElement();
+            System.out.println(item.getName() + ", " + item.getValue() + ", " + Arrays.toString(item.getLocation()) + ", " + item.getNumberOfMoves());
         }
     }
 }

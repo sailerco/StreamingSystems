@@ -15,7 +15,7 @@ import java.util.List;
 public class DomainModel {
     public static int MOVES_LIMIT = 20;
     public static Producer producer = new Producer();
-    public static Consumer consumer = new Consumer(true);
+    public static Consumer consumer = new Consumer();
     List<Event> events;
 
     //The item will be added to the Maps and the Creation Event will be called.
@@ -68,7 +68,6 @@ public class DomainModel {
 
     //the following methods are helper functions
     private void handleCollisionAndMove(String collidedItem, String movedItem, int[] position) {
-        System.out.println(collidedItem + " will be removed and " + movedItem + " will be moved to position " + Arrays.toString(position));
         producer.sendObjectMessage(movedItem, new EventDeleteItemAndMoveAnotherItem(collidedItem, movedItem, position));
     }
 

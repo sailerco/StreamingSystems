@@ -8,20 +8,20 @@ import org.example.MovingItem.MovingItemDTOImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.example.QuerySide.QueryModel.query_database;
 
-//projeziert daten auf das Query Model
+//projects data to the query model
 public class EventHandler {
     private final List<Long> eventTimes = new ArrayList<>();
-    private final Consumer consumer = new Consumer(false);
+    private final Consumer consumer = new Consumer();
 
     public void processMessage() throws jakarta.jms.JMSException {
-        //TODO: maybe implement that we get the timestamp.
-        // Might have to change the getEvent Method or create a new one, because currently it just returns the events
-        List<Event> events = consumer.getEvent(100);
-        for (Event event : events) {
-            consumeEvent(event);
+        Map<Event, Long> events = consumer.getEventWithTimestamp(100);
+        for (Map.Entry<Event, Long> entry : events.entrySet()) {
+            eventTimes.add(System.currentTimeMillis() - entry.getValue());
+            consumeEvent(entry.getKey());
         }
     }
 
@@ -31,22 +31,21 @@ public class EventHandler {
             MovingItemDTO itemDTO = new MovingItemDTOImpl(item.getName(), item.getLocation(), item.getNumberOfMoves(), item.getValue());
             query_database.put(((EventMovingItemCreated) event).item.getName(), itemDTO);
         } else if (event instanceof EventMovingItemMoved) {
-            MovingItemDTO item = query_database.get(event.id);
-            movePosition(item, (EventVector) event);
+            movePosition(query_database.get(event.id), (EventVector) event);
         } else if (event instanceof EventMovingItemDeleted) {
             query_database.remove(event.id);
         } else if (event instanceof EventMovingItemChangedValue) {
-            MovingItemDTO item = query_database.get(event.id);
-            item.setValue(((EventMovingItemChangedValue) event).newValue);
+            MovingItemDTO itemDTO = query_database.get(event.id);
+            itemDTO.setValue(((EventMovingItemChangedValue) event).newValue);
         } else if (event instanceof EventDeleteItemAndMoveAnotherItem) {
             query_database.remove(event.id);
-            MovingItemDTO item = query_database.get(((EventDeleteItemAndMoveAnotherItem) event).new_id);
-            movePosition(item, (EventVector) event);
+            MovingItemDTO itemDTO = query_database.get(((EventDeleteItemAndMoveAnotherItem) event).new_id);
+            movePosition(itemDTO, (EventVector) event);
         } else if (event instanceof EventMovingItemCreatedOnUsedPosition) {
             query_database.remove(event.id);
             MovingItem item = ((EventMovingItemCreatedOnUsedPosition) event).item;
-            MovingItemDTO itemQuery = new MovingItemDTOImpl(item.getName(), item.getLocation(), item.getNumberOfMoves(), item.getValue());
-            query_database.put(((EventMovingItemCreatedOnUsedPosition) event).item.getName(), itemQuery);
+            MovingItemDTO itemDTO = new MovingItemDTOImpl(item.getName(), item.getLocation(), item.getNumberOfMoves(), item.getValue());
+            query_database.put(((EventMovingItemCreatedOnUsedPosition) event).item.getName(), itemDTO);
         }
     }
 
