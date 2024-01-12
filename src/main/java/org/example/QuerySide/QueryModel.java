@@ -7,6 +7,6 @@ import java.util.Map;
 
 
 public class QueryModel {
-    //saves the MovingItemDTO. The Event Handler saves it and the query side can get it
+    //Represents a database of MovingItemDTO objects accessible for querying. The Event Handler saves items into this database, and the query side can retrieve items from it.
     public static Map<String, MovingItemDTO> query_database = new HashMap<>();
 }

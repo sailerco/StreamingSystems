@@ -14,8 +14,4 @@ public class EventStoreImpl implements EventStore {
             new EventHandler().consumeEvent(event);
         }
     }
-
-    public Event getEvent() throws InterruptedException {
-        return queue.take();
-    }
 }

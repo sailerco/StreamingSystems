@@ -1,6 +1,5 @@
 package org.example.QuerySide;
 
-import org.example.CommandSide.DomainModel;
 import org.example.MovingItem.MovingItemDTO;
 import org.example.MovingItem.MovingItemDTOImpl;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,8 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class QueryHandlerTest {
 
     QueryHandler handler = new QueryHandler();
+
     @BeforeAll
-    public static void setup(){
+    public static void setup() {
         MovingItemDTO itemA = new MovingItemDTOImpl("Tom", new int[]{1, 2, 3}, 0, 0);
         MovingItemDTO itemB = new MovingItemDTOImpl("Alice", new int[]{0, 4, 1}, 2, 1);
         QueryModel.query_database.put("Tom", itemA);
@@ -25,8 +25,11 @@ class QueryHandlerTest {
 
     @Test
     void getMovingItemByName() {
-        assertEquals(new MovingItemDTOImpl("Tom", new int[]{1, 2, 3}, 0, 0),handler.getMovingItemByName("Tom"));
-        assertEquals(new MovingItemDTOImpl("Alice", new int[]{0, 4, 1}, 2, 1),handler.getMovingItemByName("Alice"));
+        MovingItemDTO item = handler.getMovingItemByName("Tom");
+        assertEquals("Tom", item.getName());
+        assertArrayEquals(new int[]{1, 2, 3}, item.getLocation());
+        assertEquals(0, item.getValue());
+        assertEquals(0, item.getNumberOfMoves());
         assertNull(handler.getMovingItemByName("Bob"));
     }
 
