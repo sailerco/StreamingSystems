@@ -23,6 +23,10 @@ public class DomainModel {
         producer = new ConnectionMQ("publisher");
     }
 
+    static public void stop() throws JMSException {
+        producer.close();
+    }
+
     //The item will be added to the Maps and the Creation Event will be called.
     public void create(CommandCreateItem command) throws JMSException {
         String key = getKeyByPosition(command.location);
@@ -53,10 +57,8 @@ public class DomainModel {
         } else System.out.println("Item with id " + command.id + "doesn't exist and therefore cannot be deleted");
     }
 
-    //*The method moveItem checks if the Item exists and also if the new vector is != {0,0,0}.
-    // We then check if the item has been moved too often, if so it is also removed.
-    // It sums up the old position with the vector and checks if the new position is already occupied by another item. If so, it deletes said Item.
-    // The current items position is updated and then stored in the EventStore.*//
+    //*Verifies that the item exists, that it's getting moved by a non-zero vector,
+    // and it's not moved more than 20 times. It then moves the item and handles possible collisions.*//
     public void moveItem(CommandMoveItem command) throws JMSException {
         if (exists(command.id) && !Arrays.equals(command.vector, new int[]{0, 0, 0})) {
             if (!movedOverLimit(command.id)) {
@@ -65,7 +67,7 @@ public class DomainModel {
                 if (usedPositions.containsKey(key)) handleCollisionAndMove(key, command.id, command.vector);
                 else {
                     producer.sendMessage(new EventMovingItemMoved(command.id, command.vector));
-                    usedPositions.put(command.id, newPosition); //warum auch immer funktioniert Aufgabe 2 ohne das??
+                    usedPositions.put(command.id, newPosition);
                 }
             } else remove(command);
         } else System.out.println("Item with id " + command.id + "doesn't exist and therefore cannot be moved");
@@ -111,8 +113,5 @@ public class DomainModel {
 
     public Boolean exists(String id) {
         return idsAndMoves.containsKey(id);
-    }
-    static public void stop() throws JMSException {
-        producer.close();
     }
 }

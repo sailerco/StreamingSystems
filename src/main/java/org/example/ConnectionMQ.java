@@ -7,28 +7,24 @@ import org.example.EventPrompts.Event;
 public class ConnectionMQ {
 
     private static final String topic = "ITEM";
-    private String brokerUrl = "tcp://localhost:61616";
-    private transient ActiveMQConnectionFactory factory;
-    private transient Connection connection;
-    private transient Session session;
+    private final transient Connection connection;
+    private final transient Session session;
     private transient MessageConsumer consumer;
     private transient MessageProducer producer;
-    private transient Destination itemTopic;
 
     public ConnectionMQ(String username) throws JMSException {
-        factory = new ActiveMQConnectionFactory(brokerUrl);
+        String brokerUrl = "tcp://localhost:61616";
+        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
         factory.setTrustAllPackages(true);
         connection = factory.createConnection(username, "password");
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         // use publish-subscribe
-        itemTopic = session.createTopic(topic);
+        Destination itemTopic = session.createTopic(topic);
         // use point-2-point
-        //itemTopic = session.createQueue(topic);
-        if (username.equals("consumer"))
-            consumer = session.createConsumer(itemTopic);
-        else
-            producer = session.createProducer(itemTopic);
+        // itemTopic = session.createQueue(topic);
+        if (username.equals("consumer")) consumer = session.createConsumer(itemTopic);
+        else producer = session.createProducer(itemTopic);
     }
 
     public void sendMessage(Event event) throws JMSException {
@@ -42,9 +38,7 @@ public class ConnectionMQ {
     }
 
     public Message consumeMessage() throws JMSException {
-        if(connection != null)
-            return consumer.receive();
-        else
-            return null;
+        if (connection != null) return consumer.receive();
+        else return null;
     }
 }

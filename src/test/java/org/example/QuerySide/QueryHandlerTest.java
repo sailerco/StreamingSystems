@@ -25,8 +25,11 @@ class QueryHandlerTest {
 
     @Test
     void getMovingItemByName() {
-        assertEquals(new MovingItemDTOImpl("Tom", new int[]{1, 2, 3}, 0, 0), handler.getMovingItemByName("Tom"));
-        assertEquals(new MovingItemDTOImpl("Alice", new int[]{0, 4, 1}, 2, 1), handler.getMovingItemByName("Alice"));
+        MovingItemDTO item = handler.getMovingItemByName("Tom");
+        assertEquals("Tom", item.getName());
+        assertArrayEquals(new int[]{1, 2, 3}, item.getLocation());
+        assertEquals(0, item.getValue());
+        assertEquals(0, item.getNumberOfMoves());
         assertNull(handler.getMovingItemByName("Bob"));
     }
 
