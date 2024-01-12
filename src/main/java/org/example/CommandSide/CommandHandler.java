@@ -3,10 +3,7 @@ package org.example.CommandSide;
 import org.example.CommandPrompts.*;
 public class CommandHandler {
     DomainModel model = new DomainModel();
-
-    // Singleton implementiert
     private static CommandHandler INSTANCE;
-
     public static CommandHandler getInstance() {
         if (INSTANCE == null)
             INSTANCE = new CommandHandler();

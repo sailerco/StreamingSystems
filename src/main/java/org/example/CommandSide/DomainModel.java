@@ -17,7 +17,7 @@ public class DomainModel {
     public static Map<String, int[]> usedPositions = new HashMap<>();
     EventStoreImpl eventStore = new EventStoreImpl();
 
-    //The item will be added to the Maps and the Creation Event will be called.
+    //The item will be added to the Maps and the creation event will be called.
     public void create(CommandCreateItem command) {
         String key = getKeyByPosition(command.location);
         if (!exists(command.id) && (Arrays.equals(command.location, new int[]{0, 0, 0}) || !usedPositions.containsKey(key))) {
@@ -38,7 +38,7 @@ public class DomainModel {
         else System.out.println("Item with id " + command.id + "doesn't exist and therefore cannot be changed");
     }
 
-    //If the item exists HashMaps will be updated and the Deletion Event will be called.
+    //The ID will be removed from the Maps and the Deletion Event will be called.
     public void remove(CommandPrompt command) {
         if (exists(command.id)) {
             removeFromHashes(command.id);
@@ -46,10 +46,8 @@ public class DomainModel {
         } else System.out.println("Item with id " + command.id + "doesn't exist and therefore cannot be deleted");
     }
 
-    //*The method moveItem checks if the Item exists and also if the new vector is != {0,0,0}.
-    // We then check if the item would have been moved too often, if so it is also removed.
-    // It sums up the old position with the vector and checks if the new position is already occupied by another item. If so, it deletes said Item.
-    // The current items position is updated and then stored in the EventStore.*//
+    //*Verifies that the item exists, that it's getting moved by a non-zero vector,
+    // and it's not moved more than 20 times. It then moves the item and handles possible collisions.*//
     public void moveItem(CommandMoveItem command) {
         if (exists(command.id) && !Arrays.equals(command.vector, new int[]{0, 0, 0})) {
             if (!movedOverLimit(command.id)) {
@@ -68,7 +66,7 @@ public class DomainModel {
         removeFromHashes(collidedItem);
     }
 
-    //If the Item was moved >= 20 times it will be removed. Otherwise, the IDsAndMoves field is updated.
+    //If the Item was moved >= MOVING_LIMIT times it will be removed. Otherwise, the IDsAndMoves field is updated.
     public boolean movedOverLimit(String id) {
         int moves = idsAndMoves.get(id) + 1;
         if (moves >= MOVES_LIMIT) return true;

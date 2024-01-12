@@ -2,7 +2,7 @@ package org.example.MovingItem;
 
 public class MovingItemImpl implements MovingItem {
     private final String name;
-    private int[] location = new int[3];
+    private int[] location;
     private int moves;
     private int value;
 
