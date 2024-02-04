@@ -28,7 +28,6 @@ public class Main {
     );
 
     public static void main(String[] args) throws Exception {
-        //TODO: Update the Tests
         env.start(); //for embedded
         EventHandler eventHandler = new EventHandler();
 
