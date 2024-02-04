@@ -22,14 +22,14 @@ public class ConnectionMQ {
         // use publish-subscribe
         Destination itemTopic = session.createTopic(topic);
         // use point-2-point
-        // itemTopic = session.createQueue(topic);
+        //Destination itemTopic = session.createQueue(topic);
         if (username.equals("consumer")) consumer = session.createConsumer(itemTopic);
         else producer = session.createProducer(itemTopic);
     }
 
     public void sendMessage(Event event) throws JMSException {
         ObjectMessage message = session.createObjectMessage(event);
-        message.setLongProperty("timestamp", System.currentTimeMillis());
+        message.setJMSTimestamp(System.currentTimeMillis());
         producer.send(message);
     }
 

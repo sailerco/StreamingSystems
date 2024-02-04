@@ -26,10 +26,10 @@ public class EventHandler {
         connectionMQ.close();
     }
 
-    public void processMessage() throws jakarta.jms.JMSException {
+    public void processMessage() throws JMSException {
         ObjectMessage eventMessage = (ObjectMessage) connectionMQ.consumeMessage();
         if (eventMessage.getObject() instanceof Event) {
-            eventTimes.add((System.currentTimeMillis() - eventMessage.getLongProperty("timestamp")));
+            eventTimes.add((System.currentTimeMillis() - eventMessage.getJMSTimestamp()));
             consumeEvent((Event) eventMessage.getObject());
         }
     }
