@@ -22,7 +22,6 @@ public class Broker {
         //users.add(new AuthenticationUser("admin", "password", "admins,publishers,consumers"));
         users.add(new AuthenticationUser("publisher", "password", "publishers,consumers"));
         users.add(new AuthenticationUser("consumer", "password", "consumers"));
-        // todo: users.add(new AuthenticationUser("guest", "password", "guests"));
         authentication.setUsers(users);
 
         broker.setPlugins(new BrokerPlugin[]{authentication});
